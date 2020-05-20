@@ -1,0 +1,57 @@
+For use VTR, you need do some external settings in your machine.
+
+Download python:
+https://www.python.org/
+
+Add python in enviroment variables(windows only):
+Go to enviroment variabels settings and add in path fields, the path of the folder
+that is the python installation
+
+Download Pymol:
+https://pymol.org/
+
+Add Pymol in enviroment variables(windows only):
+Go to enviroment variabels settings and add in path fields, the path of the folder
+Scripts that is in the Pymol installation folder
+
+Download MinGW:
+https://osdn.net/projects/mingw/downloads/68260/mingw-get-setup.exe/
+
+Add g++.exe path in enviroment variables(windows only):
+Go to enviroment variabels settings and add in path fields, the path of the folder
+bin that is in the MinGW installation folder
+
+Installation complete, now, you need put the target proteins in the folder Data,
+that is in VTR extraction folder, in this folder, there's 2 proteins of globin type
+for tests, you can add more proteins in the folder by copy .pdb files to the folder.
+
+For VTR first run, just double click the .py file "VTR" in Source folder, after,
+you can use the software by this way, or import the VTR_Geometric python file, and
+call function:
+
+>> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path,*args,**kwargs)
+
+kwargs:
+int cutoff   = Cutoff to AVD (Default = 2)
+char mtype    = 'd' for detailed graphic information (Default = 'x'(No details))
+char chain11 = First chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
+char chain11 = Second chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
+char chain11 = First chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
+char chain11 = Second chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
+
+Exemple:
+1 - Run VTR with default parameters:
+>> import VTR_Geometric
+
+>> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path)
+
+
+2 - Run VTR with details and different cutoff:
+>> import VTR_Geometric
+
+>> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path,cutoff=3,mtyp = 'd')
+
+3 - Run VTR with selected chains:
+>> import VTR_Geometric
+
+>> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path,chain11 = 'A',chain12 = 'B',chain21 = 'C',chain22 = 'D')

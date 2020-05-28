@@ -48,9 +48,9 @@ while (1):
           print(selection)
           question = int(input('   '))
      if (question == 1):
-          VTR_Geometric.main("../Data/" + rtt_protein + ".pdb", "../Data/" + stc_protein + ".pdb",cutoff,'x',chainrtt1,chainrtt2,chainstc1,chainstc2)
+          match = VTR_Geometric.Match("../Data/" + rtt_protein + ".pdb", "../Data/" + stc_protein + ".pdb",cutoff,'x',chainrtt1,chainrtt2,chainstc1,chainstc2)
      elif (question == 2):
-          VTR_Geometric.main("../Data/" + rtt_protein + ".pdb", "../Data/" + stc_protein + ".pdb",cutoff,"d",chainrtt1,chainrtt2,chainstc1,chainstc2)
+          match = VTR_Geometric.Match("../Data/" + rtt_protein + ".pdb", "../Data/" + stc_protein + ".pdb",cutoff,"d",chainrtt1,chainrtt2,chainstc1,chainstc2)
      input('Press Enter to Return')
      
 

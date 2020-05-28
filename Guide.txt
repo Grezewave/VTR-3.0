@@ -20,19 +20,42 @@ char chain11 = Second chain to be filtered in the contact calculation of protein
 char chain11 = First chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
 char chain11 = Second chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
 
+object is of class "Match";
+Match metods and attributes:
+Match.rtt_protein = protein 1 object(class protein(see Classify.py code))
+Match.stc_protein = protein 2 object(class protein)
+Match.rtt_contacts = a list of contacts in protein 1 (list of class Contact(see Contacts.py code))
+Match.stc_contacts = a list of contacts in protein 2 (list of class Contact)
+Match.matches = a list of matches (list of class match)
+Match.rtt_dismatches = a list of contacts that no match protein 1 (list of class Contact)
+Match.stc_dismatches = a list of contacts that no match protein 2 (list of class Contact)
+Match.RMSD = the match RMSD(float, bool = False if 0 matches)
+MAtch.VTR = (float, bool = False if 0 matches)
+Match.mAVD = average AVD (float, bool = False if 0 matches)
+Match.number = number of matches
+Match.time = execution time (float)
+Match.type = type of match(string)
+Match.self.chains = selected chains(string)
+Match.cutoff = selected cutoff(int)
+Match.to_csv(list(list),outname(string)) = takes one _list as parameters(contacts, dismatches, matches) and create a csv file 
+named "outname" with the values.
+
 Exemple:
 1 - Run VTR with default parameters:
 >> import VTR_Geometric
 
->> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path)
+>> object = VTR_Geometric.main(protein1's_path,protein2's_path)
 
 
 2 - Run VTR with details and different cutoff:
 >> import VTR_Geometric
 
->> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path,cutoff=3,mtyp = 'd')
+>> object = VTR_Geometric.main(protein1's_path,protein2's_path,cutoff=3,mtyp = 'd')
 
 3 - Run VTR with selected chains:
 >> import VTR_Geometric
 
->> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path,chain11 = 'A',chain12 = 'B',chain21 = 'C',chain22 = 'D')
+>> object = VTR_Geometric.main(protein1's_path,protein2's_path,chain11 = 'A',chain12 = 'B',chain21 = 'C',chain22 = 'D')
+
+4 - Passing rtt_contacts for csv:
+>> object.to_csv(object.rtt_contacts, 'a.csv')

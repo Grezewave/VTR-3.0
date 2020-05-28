@@ -7,6 +7,9 @@ import numpy
 import OSfunct
 import math
 
+
+
+
 class match:
     def __init__(self,rtt_contact,stc_contact):
         self.rtt_contact = rtt_contact
@@ -132,7 +135,7 @@ def freq_VMD(matches,cutoff,detail,folder, protein1, protein2):
     _plt.set_xlabel('AVD')
 
     fig1.savefig('../Graphs/' + folder + '/AVDFrequency')
-    plt.show()
+    #plt.show()
     fig1.clf()
 
     if detail == "d":

@@ -75,7 +75,7 @@ def VTR(matches, rtt_contacts, stc_contacts, rtt_dismatches, stc_dismatches, cut
     for i in matches:
         AVD += i.VMD()
     VTR = ((AVD/(cutoff*len(matches)))*((rtt_dismatches + stc_dismatches)/(len(rtt_contacts) + len(stc_contacts))))
-    return VTR,(AVD/(cutoff*len(matches)))
+    return VTR,(AVD/(len(matches)))
 
 def match_contacts(rtt_contacts,stc_contacts,cutoff):
     #try to match contacts by distance only
@@ -112,7 +112,7 @@ def match_contacts(rtt_contacts,stc_contacts,cutoff):
             stc_dismatches.append(m)
     return (matches,rtt_dismatches,stc_dismatches)
 
-def freq_VMD(matches,cutoff,detail,folder, protein1, protein2):
+def freq_VMD(matches,cutoff,folder, protein1, protein2):
     #create histograms for VMD frequency and residues interactions
     x = [round(i,1) for i in numpy.arange(0,float(cutoff+0.1),0.1)]
     VMD_freq = {}
@@ -137,8 +137,9 @@ def freq_VMD(matches,cutoff,detail,folder, protein1, protein2):
     fig1.savefig('../Graphs/' + folder + '/AVDFrequency')
     #plt.show()
     fig1.clf()
+    fig1.close()
 
-    if detail == "d":
+    if True:
         #provide detailed graphic info
         #initiate a frequency distribuition for each reasidue in each protein
         rtt_freq = { "ALA" : [0 for i in range(0,20)],
@@ -231,6 +232,7 @@ def freq_VMD(matches,cutoff,detail,folder, protein1, protein2):
             fig.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.1, hspace=0.5)
             fig.savefig('../Graphs/' + folder + '/' + ref)
             fig.clf()
+            fig.close()
             x += 1  
         print("Detailed Graphs created at Graphs/"+folder+" folder")
 

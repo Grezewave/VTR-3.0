@@ -1,10 +1,12 @@
 #This program recieve a PDB format file and create a protein object
+resi = ["ALA","ARG","ASN","ASP","CYS","GLN","GLY","GLU","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL"]
 class proteins:
     def __init__(self):
         self.idPDB = ""
         self.header = ""
         self.title = ""
         self.chains = []
+        self.warnings = []
     def size(self):
         size = 0
         for i in self.chains:
@@ -15,6 +17,9 @@ class chain:
     def __init__(self):
         self.id = ""
         self.residues = []
+    def ressize(self):
+        return (max([i.parameter for i in self.residues]))
+
 class residue:
     def __init__(self):
         self.id = ""
@@ -58,6 +63,8 @@ def chainslist(data):
         if i[0:4] == "ATOM":
             if not(i[21] in info):
                 info.extend(i[21])
+        if i[0:6] == "ENDMDL":
+            break
     return info
             
 def chainsdef(chainlist,data):
@@ -84,6 +91,8 @@ def chainsdef(chainlist,data):
                     if int(i[22:26]) not in guard:
                         guard.append(int(i[22:26]))
                         chainlist[e].residues.append(i[17:20])
+        if i[0:6] == "ENDMDL":
+            break
     return chainlist
 
 def residuedef(data,reslist,chain):
@@ -109,6 +118,8 @@ def residuedef(data,reslist,chain):
                     if i[17:20] == reslist[o].id:
                         reslist[o].parameter = int(i[22:26])
                         reslist[o].atoms.append(i[13:17])
+        if i[0:6] == "ENDMDL":
+            break
     return reslist
     
 def proteindef(data):
@@ -122,6 +133,8 @@ def proteindef(data):
     for i in protein.chains:
         i.seq = residuedef(data,i.residues,i.id)
         for e in i.residues:
+            if e.id not in resi:
+                protein.warnings.append(e.id)
             e.atoms = atomdef(data,e.atoms,e.id,e.parameter,i.id)
     return protein
 
@@ -152,6 +165,8 @@ def atomdef(data,atomlist,resname,parameter,chain):
                     except:
                         h = 0
                     x+=1
+        if i[0:6] == "ENDMDL":
+            break
     return atomlist
 
 def classify(file):

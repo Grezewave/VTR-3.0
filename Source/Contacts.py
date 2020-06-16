@@ -345,10 +345,19 @@ def defcontact(atom1,stats1,atom2,stats2):
         
 
 
-def contacts(protein,outname,chain1,chain2):
+def contacts(protein,outname,chain1,chain2, detail = 'x'):
     #define contacts
     contacts = []
-    outfile = "../Results/Contacts/" + outname + "_Contacts.txt"
+    outfile = "../Results/Contacts" + outname + "_"
+    if chain1 != '/':
+        outfile+=chain1
+    else:
+        outfile+='$'
+    if chain2 != '/':
+        outfile+=chain2
+    else:
+        outfile+='$'
+    outfile+="_Contacts.txt"
     out = open(outfile,'w')
     x = 0
     allow = 0
@@ -377,18 +386,22 @@ def contacts(protein,outname,chain1,chain2):
                             #define the atom interaction types
                             stat1 = atomclass(a.residues[b].id,d.type)
                             stat2 = atomclass(a.residues[c].id,e.type)
-                            #verify interactions of N and O atoms
+                            #verify interactions of N and O atoms, if d is marked
                             
-                            if ("O   " == stat1.atom) or ("N   " == stat1.atom):
-                                if ("O   " == stat2.atom) or ("N   " == stat2.atom):
-                                    if abs(a.residues[b].parameter - a.residues[c].parameter) <= 4:
-                                        validation = 0
-                                    else: 
+                            if detail == 'd':
+                                validation = 1
+                            else:
+                                if ("O   " == stat1.atom) or ("N   " == stat1.atom):
+                                    if ("O   " == stat2.atom) or ("N   " == stat2.atom):
+                                        if abs(a.residues[b].parameter - a.residues[c].parameter) <= 4:
+                                            validation = 0
+                                        else: 
+                                            validation = 1
+                                    else:
                                         validation = 1
                                 else:
                                     validation = 1
-                            else:
-                                validation = 1
+
                             if validation:
                                 #try to define the contacts
                                 if (d not in ringMembersA) and (e not in ringMembersB):
@@ -456,15 +469,7 @@ def contacts(protein,outname,chain1,chain2):
                                     contacts.append(item)
                                     x+=1
                                 if (stack != []):
-                                    ringStack = []
-                                    ringStack.append(stack[0] + '(')
-                                    for atom in ringMembersA:
-                                        ringStack[0] += atom.type + str(atom.id) + ','
-                                    ringStack[0] += ' - '
-                                    for atom in ringMembersB:
-                                        ringStack[0] += atom.type + str(atom.id) + ','
-                                    ringStack[0] += ')'
-                                    item = Contact(x,outname,protein.chains[f],protein.chains[g],h,i,j,k,ringStack, cdistance)
+                                    item = Contact(x,outname,protein.chains[f],protein.chains[g],h,i,j,k,stack, cdistance)
                                     item.centroid1 = centroid1
                                     item.centroid2 = centroid2
                                     contacts.append(item)

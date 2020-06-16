@@ -137,7 +137,7 @@ def freq_VMD(matches,cutoff,folder, protein1, protein2):
     fig1.savefig('../Graphs/' + folder + '/AVDFrequency')
     #plt.show()
     fig1.clf()
-    fig1.close()
+    plt.close()
 
     if True:
         #provide detailed graphic info
@@ -232,7 +232,7 @@ def freq_VMD(matches,cutoff,folder, protein1, protein2):
             fig.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.1, hspace=0.5)
             fig.savefig('../Graphs/' + folder + '/' + ref)
             fig.clf()
-            fig.close()
+            plt.close()
             x += 1  
         print("Detailed Graphs created at Graphs/"+folder+" folder")
 

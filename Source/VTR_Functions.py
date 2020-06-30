@@ -322,3 +322,13 @@ def writer(protein1,protein2,rtt_protein,stc_protein,rtt_contacts,stc_contacts,m
             out.write(", ")    
         out.write("\n\n")
     out.close()
+
+
+def clearH(file):
+    lines = open(file, 'r').readlines()
+    clines = [i for i in lines.copy() if i[0:4] == 'ATOM']
+    for line in clines:
+        if line[13] == 'H':
+            lines.remove(line)
+    
+    open(file, 'w').write(''.join(lines))

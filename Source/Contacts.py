@@ -42,28 +42,33 @@ class Centroid:
         self.y = y
         self.z = z
 
-#Atom interactions type definitions    
+#Atom interactions type definitions
+
 hydrophobic = {"ALA" : ["CB  "],
-               "ARG" : ["CB  ","CG  ","CD  "],
+               "ARG" : ["CB  ","CG  "],
                "ASN" : ["CB  "],
                "ASP" : ["CB  "],
                "CYS" : ["CB  "],
                "GLN" : ["CB  ","CG  "],
                "GLU" : ["CB  ","CG  "],
-               "HIS" : ["CB  ","CG  ","CD2 ","CE1 "],
+               "HIS" : ["CB  "],
+               "HIE" : ["CB  "],
+               "HID" : ["CB  "],
                "ILE" : ["CB  ","CG1 ","CG2 ","CD1 "],
                "LEU" : ["CB  ","CG  ","CD1 ","CD2 "],
                "LYS" : ["CB  ","CG  ","CD  "],
                "MET" : ["CB  ","CG  ","CE  "],
                "PHE" : ["CB  ","CG  ","CD1 ","CD2 ","CE1 ","CE2 ","CZ  "],
-               "PRO" : ["CB  ","CG  ","CD  "],
+               "PRO" : ["CB  ","CG  "],
                "THR" : ["CG2 "],
-               "TRP" : ["CB  ","CG  ","CD1 ","CD2 ","CE2 ","CE3 ","CH2 ","CZ  ","CZ2 ","CZ3 "],
-               "TYR" : ["CB  ","CG  ","CD1 ","CD2 ","CE1 ","CE2 ","CZ  "],
+               "TRP" : ["CB  ","CG  ","CD2 ","CE3 ","CH2 ","CZ2 ","CZ3 "],
+               "TYR" : ["CB  ","CG  ","CD1 ","CD2 ","CE1 ","CE2 "],
                "VAL" : ["CB  ","CG1 ","CG2 "]}
 
-positives = {"ARG" : ["NH1 ","NH2 "],
+positives = {"ARG" : ["NE  ","CZ  ","NH1 ","NH2 "],
              "HIS" : ["ND1 ","NE2 "],
+             "HIE" : ["ND1 ","NE2 "],
+             "HID" : ["ND1 ","NE2 "],
              "LYS" : ["NZ  "]}
 
 negatives = {"ASP" : ["OD1 ","OD2 "],
@@ -73,38 +78,41 @@ acceptors = {"ALA" : ["O   "],
              "ARG" : ["O   "],
              "ASN" : ["O   ","OD1 "],
              "ASP" : ["O   ","OD1 ","OD2 "],
-             "CYS" : ["O   "],
+             "CYS" : ["O   ","SG  "],
              "GLN" : ["O   ","OE1 "],
              "GLU" : ["O   ","OE1 ","OE2 "],
              "GLY" : ["O   "],
-             "HIS" : ["O   "],
+             "HIS" : ["O   ","ND1 ","NE2 "],
+             "HIE" : ["O   ","ND1 ","NE2 "],
+             "HID" : ["O   ","ND1 ","NE2 "],
              "ILE" : ["O   "],
              "LEU" : ["O   "],
              "LYS" : ["O   "],
-             "MET" : ["O   "],
+             "MET" : ["O   ","SD  "],
              "PHE" : ["O   "],
              "PRO" : ["O   "],
-             "SER" : ["O   "],
-             "THR" : ["O   "],
+             "SER" : ["O   ","OG  "],
+             "THR" : ["O   ","OG1 "],
              "TRP" : ["O   "],
-             "TYR" : ["O   "],
+             "TYR" : ["O   ","OH  "],
              "VAL" : ["O   "]}
 
 donners = {"ALA" : ["N   "],
            "ARG" : ["N   ","NE  ","NH1 ","NH2 "],
-           "ASN" : ["N   ","ND2 ","OD1 "],
+           "ASN" : ["N   ","ND2 "],
            "ASP" : ["N   "],
-           "CYS" : ["N   "],
+           "CYS" : ["N   ","SG  "],
            "GLN" : ["N   ","NE2 "],
            "GLU" : ["N   "],
            "GLY" : ["N   "],
            "HIS" : ["N   ","ND1 ","NE2 "],
+           "HID" : ["N   ","ND1 ","NE2 "],
+           "HIE" : ["N   ","ND1 ","NE2 "],
            "ILE" : ["N   "],
            "LEU" : ["N   "],
            "LYS" : ["N   ","NZ  "],
            "MET" : ["N   "],
            "PHE" : ["N   "],
-           "PRO" : ["N   "],
            "SER" : ["N   ","OG  "],
            "THR" : ["N   ","OG1 "],
            "TRP" : ["N   ","NE1 "],
@@ -112,11 +120,13 @@ donners = {"ALA" : ["N   "],
            "VAL" : ["N   "]}
 
 aromathics = {"HIS" : ["CG  ","ND1 ","CD2 ","CE1 ","NE2 "],
+              "HID" : ["CG  ","ND1 ","CD2 ","CE1 ","NE2 "],
+              "HIE" : ["CG  ","ND1 ","CD2 ","CE1 ","NE2 "],
               "PHE" : ["CG  ","CD1 ","CD2 ","CE1 ","CE2 ","CZ  "],
               "TRP" : ["CG  ","CD1 ","CD2 ","NE1 ","CE2 ","CE3 ","CZ2 ","CZ3 ","CH2 "],
               "TYR" : ["CD1 ","CD2 ","CE1 ","CE2 ","CG  ","CZ  "]}
 
-sulfur =  {"CYS" : ["S   "]}
+sulfur = {"CYS" : ["S   "]}
 
 classes = [hydrophobic, positives, negatives, acceptors, donners, aromathics, sulfur]
 
@@ -131,160 +141,160 @@ def centroid_distance(A,B,resA,resB):
     ringMembersB = []
     if resA.id == 'PHE':
         for atom in resA.atoms:
-            if atom.type == 'CZ  ':
+            if atom.type[0:3] == 'CZ ':
                 ringMembersA.append(atom)
                 a = atom
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersA.append(atom)
                 b = atom
-            elif atom.type == 'CE1 ':
+            elif atom.type[0:3] == 'CE1':
                 ringMembersA.append(atom)
-            elif atom.type == 'CE2 ':
+            elif atom.type[0:3] == 'CE2':
                 ringMembersA.append(atom)
-            elif atom.type == 'CD1 ':
+            elif atom.type[0:3] == 'CD1':
                 ringMembersA.append(atom)
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersA.append(atom)
         centroid1 = Centroid((a.x + b.x)/2,(a.y + b.y)/2,(a.z + b.z)/2)
     
     elif resA.id == 'TYR':
         for atom in resA.atoms:
-            if atom.type == 'CZ  ':
+            if atom.type[0:3] == 'CZ ':
                 ringMembersA.append(atom)
                 a = atom
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersA.append(atom)
                 b = atom
-            elif atom.type == 'CE1 ':
+            elif atom.type[0:3] == 'CE1':
                 ringMembersA.append(atom)
-            elif atom.type == 'CE2 ':
+            elif atom.type[0:3] == 'CE2':
                 ringMembersA.append(atom)
-            elif atom.type == 'CD1 ':
+            elif atom.type[0:3] == 'CD1':
                 ringMembersA.append(atom)
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersA.append(atom)
         centroid1 = Centroid((a.x + b.x)/2,(a.y + b.y)/2,(a.z + b.z)/2)
 
     elif resA.id == 'HIS':
         for atom in resA.atoms:
-            if atom.type == 'ND1 ':
+            if atom.type[0:3] == 'ND1':
                 ringMembersA.append(atom)
                 a = atom
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersA.append(atom)
                 b = atom
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersA.append(atom)
                 c = atom
-            elif atom.type == 'CE1 ':
+            elif atom.type[0:3] == 'CE1':
                 ringMembersA.append(atom)
                 d = atom
-            elif atom.type == 'NE2 ':
+            elif atom.type[0:3] == 'NE2':
                 ringMembersA.append(atom)
                 e = atom
         centroid1 = Centroid((a.x + b.x + c.x + d.x + e.x)/5,(a.y + b.y + c.y + d.y + e.y)/5,(a.z + b.z + c.z + d.z + e.z)/5)
 
     elif resA.id == 'TRP':
         for atom in resA.atoms:
-            if atom.type == 'CE2 ':
+            if atom.type[0:3] == 'CE2':
                 ringMembersA.append(atom)
                 a = atom
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersA.append(atom)
                 b = atom
-            elif atom.type == 'CD1 ':
+            elif atom.type[0:3] == 'CD1':
                 ringMembersA.append(atom)
-            elif atom.type == 'NE1 ':
+            elif atom.type[0:3] == 'NE1':
                 ringMembersA.append(atom)
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersA.append(atom)
-            elif atom.type == 'CZ2 ':
+            elif atom.type[0:3] == 'CZ2':
                 ringMembersA.append(atom)
-            elif atom.type == 'CE3 ':
+            elif atom.type[0:3] == 'CE3':
                 ringMembersA.append(atom)
-            elif atom.type == 'CH2 ':
+            elif atom.type[0:3] == 'CH2':
                 ringMembersA.append(atom)
-            elif atom.type == 'CZ3 ':
+            elif atom.type[0:3] == 'CZ3':
                 ringMembersA.append(atom)
         centroid1 = Centroid((a.x + b.x)/2,(a.y + b.y)/2,(a.z + b.z)/2)
 
 #-------------------------------------------------------------------------------------------------------------------------------
     if resB.id == 'PHE':
         for atom in resB.atoms:
-            if atom.type == 'CZ  ':
+            if atom.type[0:3] == 'CZ ':
                 ringMembersB.append(atom)
                 a = atom
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersB.append(atom)
                 b = atom
-            elif atom.type == 'CE1 ':
+            elif atom.type[0:3] == 'CE1':
                 ringMembersB.append(atom)
-            elif atom.type == 'CE2 ':
+            elif atom.type[0:3] == 'CE2':
                 ringMembersB.append(atom)
-            elif atom.type == 'CD1 ':
+            elif atom.type[0:3] == 'CD1':
                 ringMembersB.append(atom)
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersB.append(atom)
         centroid2 = Centroid((a.x + b.x)/2,(a.y + b.y)/2,(a.z + b.z)/2)
     
     elif resB.id == 'TYR':
         for atom in resB.atoms:
-            if atom.type == 'CZ  ':
+            if atom.type[0:3] == 'CZ ':
                 ringMembersB.append(atom)
                 a = atom
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersB.append(atom)
                 b = atom
-            elif atom.type == 'CE1 ':
+            elif atom.type[0:3] == 'CE1':
                 ringMembersB.append(atom)
-            elif atom.type == 'CE2 ':
+            elif atom.type[0:3] == 'CE2':
                 ringMembersB.append(atom)
-            elif atom.type == 'CD1 ':
+            elif atom.type[0:3] == 'CD1':
                 ringMembersB.append(atom)
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersB.append(atom)
         centroid2 = Centroid((a.x + b.x)/2,(a.y + b.y)/2,(a.z + b.z)/2)
 
     elif resB.id == 'HIS':
         for atom in resB.atoms:
-            if atom.type == 'ND1 ':
+            if atom.type[0:3] == 'ND1':
                 ringMembersB.append(atom)
                 a = atom
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersB.append(atom)
                 b = atom
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersB.append(atom)
                 c = atom
-            elif atom.type == 'CE1 ':
+            elif atom.type[0:3] == 'CE1':
                 ringMembersB.append(atom)
                 d = atom
-            elif atom.type == 'NE2 ':
+            elif atom.type[0:3] == 'NE2':
                 ringMembersB.append(atom)
                 e = atom
         centroid2 = Centroid((a.x + b.x + c.x + d.x + e.x)/5,(a.y + b.y + c.y + d.y + e.y)/5,(a.z + b.z + c.z + d.z + e.z)/5)
 
     elif resB.id == 'TRP':
         for atom in resB.atoms:
-            if atom.type == 'CE2 ':
+            if atom.type[0:3] == 'CE2':
                 ringMembersB.append(atom)
                 a = atom
-            elif atom.type == 'CD2 ':
+            elif atom.type[0:3] == 'CD2':
                 ringMembersB.append(atom)
                 b = atom
-            elif atom.type == 'CD1 ':
+            elif atom.type[0:3] == 'CD1':
                 ringMembersB.append(atom)
-            elif atom.type == 'NE1 ':
+            elif atom.type[0:3] == 'NE1':
                 ringMembersB.append(atom)
-            elif atom.type == 'CG  ':
+            elif atom.type[0:3] == 'CG ':
                 ringMembersB.append(atom)
-            elif atom.type == 'CZ2 ':
+            elif atom.type[0:3] == 'CZ2':
                 ringMembersB.append(atom)
-            elif atom.type == 'CE3 ':
+            elif atom.type[0:3] == 'CE3':
                 ringMembersB.append(atom)
-            elif atom.type == 'CH2 ':
+            elif atom.type[0:3] == 'CH2':
                 ringMembersB.append(atom)
-            elif atom.type == 'CZ3 ':
+            elif atom.type[0:3] == 'CZ3':
                 ringMembersB.append(atom)
         centroid2 = Centroid((a.x + b.x)/2,(a.y + b.y)/2,(a.z + b.z)/2)
 
@@ -296,7 +306,7 @@ def atomclass(residue, atom):
     #Return a list of interactions types of a atom
     for i in range(0,len(classes)):
         if residue in classes[i]:
-            if atom in classes[i][residue]:
+            if (atom[0:3]+" ") in classes[i][residue]:
                 stats.append(i)
     state = State(atom, residue, stats)
     return state
@@ -310,7 +320,7 @@ def search_stacking(atom1,stats1,atom2,stats2, res1, res2):
     centroid2 = 0
     if (5 in stats1) and (5 in stats2):
         distance, ringMembersA, ringMembersB, centroid1, centroid2 = centroid_distance(atom1,atom2, res1, res2)
-        if (distance >= 3) and (distance <= 6):
+        if (distance >= 2) and (distance <= 6):
             contact.append("Aromatic Stacking")
     return contact, ringMembersA, ringMembersB, distance, centroid1, centroid2
 
@@ -319,11 +329,11 @@ def defcontact(atom1,stats1,atom2,stats2):
     distance = adistance(atom1,atom2)
     contact = []
     if distance >=2:
-        if (distance <= 3.8):
+        if (distance <= 4.5):
             if (0 in stats1) and (0 in stats2):
                 contact.append("Hydrophobic")
-                if (5 in stats1) and (5 in stats2):
-                    contact.append("Aromatic Stacking")
+#                if (5 in stats1) and (5 in stats2):
+#                    contact.append("Aromatic Stacking")
         if (distance <= 6):
             if (1 in stats1) and (2 in stats2):
                 contact.append("Attractive")
@@ -333,17 +343,37 @@ def defcontact(atom1,stats1,atom2,stats2):
                 contact.append("Repulsive")
             elif (2 in stats1) and (2 in stats2):
                 contact.append("Repulsive")
-        if (distance <= 3.2):
-            if (3 in stats1) and (4 in stats2):
-                contact.append("Hydrogen Bonds")
-            elif (4 in stats1) and (3 in stats2):
-                contact.append("Hydrogen Bonds")
+    if (distance <= 3.9):
+        if (3 in stats1) and (4 in stats2):
+            contact.append("Hydrogen Bonds")
+        elif (4 in stats1) and (3 in stats2):
+            contact.append("Hydrogen Bonds")
     if (distance >= 1.5) and (distance <= 2.8):
         if (6 in stats1) and (6 in stats2):
             contact.append("Disulphide Bonds")
     return contact, distance
         
+def statistics(contact_list, outname):
+    out = open(outname+'.csv', 'w')
+    counter = {
+        "Hydrophobic" : 0,
+        "Attractive" : 0,
+        "Repulsive" : 0,
+        "Hydrogen Bonds" : 0,
+        "Disulphide Bonds" : 0,
+        "Aromatic Stacking" : 0
+    }
+    for contact in contact_list:
+        for typ in contact.contacts:
+            counter[typ] += 1
 
+    out.write("%s,%d\n"%("Hydrophobic",counter["Hydrophobic"]))
+    out.write("%s,%d\n"%("Attractive",counter["Attractive"]))
+    out.write("%s,%d\n"%("Hydrogen Bonds",counter["Hydrogen Bonds"]))
+    out.write("%s,%d\n"%("Disulphide Bonds",counter["Disulphide Bonds"]))
+    out.write("%s,%d\n"%("Repulsive",counter["Repulsive"]))
+    out.write("%s,%d\n"%("Aromatic Stacking",counter["Aromatic Stacking"]))
+        
 
 def contacts(protein,outname,chain1,chain2, detail = 'x'):
     #define contacts
@@ -383,6 +413,8 @@ def contacts(protein,outname,chain1,chain2, detail = 'x'):
                     ringMembersB = []
                     for d in a.residues[b].atoms:
                         for e in a.residues[c].atoms:
+                            if adistance(d,e) > 8:
+                                continue
                             #define the atom interaction types
                             stat1 = atomclass(a.residues[b].id,d.type)
                             stat2 = atomclass(a.residues[c].id,e.type)
@@ -453,7 +485,9 @@ def contacts(protein,outname,chain1,chain2, detail = 'x'):
                     for i in protein.chains[g].residues:
                         ringMembersB = []
                         for j in h.atoms:
-                            for k in i.atoms:   
+                            for k in i.atoms:
+                                if adistance(j,k) > 8:
+                                    continue
                                 #define the atom interaction types
                                 stat1 = atomclass(h.id,j.type)
                                 stat2 = atomclass(i.id,k.type)
@@ -477,6 +511,7 @@ def contacts(protein,outname,chain1,chain2, detail = 'x'):
             allow = 0
 
     #Write output
+    statistics(contacts, outfile[0:-13])
     out.write(protein.header)
     out.write("\n")
     out.write(protein.title.rstrip(" "))

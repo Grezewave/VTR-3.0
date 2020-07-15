@@ -6,15 +6,20 @@ Installation complete, now, you need put the target proteins in the folder Data,
 that is in VTR extraction folder, in this folder, there's 2 proteins of globin type
 for tests, you can add more proteins in the folder by copy .pdb files to the folder.
 
+-------------------------IMPORTANT----------------------------------------------
+
 For VTR first run, run VTR.py script in the Source folder to create the necessary folders,
 after, you can use the software by this way, or import the VTR_Geometric python file, and
-call function:
+call constructor:
 
->> Matches_lists,Protein1_dismatches_list,Protein2_dismatches_list = VTR_Geometric.main(protein1's_path,protein2's_path,*args,**kwargs)
+--------------------------------------------------------------------------------
+
+>> import VTR_Geometric
+>> object = VTR_Geometric.Match(protein1's_path,protein2's_path,*args,**kwargs)
 
 kwargs:
 int cutoff   = Cutoff to AVD (Default = 2)
-char mtype    = 'd' for detailed graphic information (Default = 'x'(No details))
+char mtype   = 'd'for include contacts among main-chain atoms of closer residues(increase the number of results highly). (Default = 'x'(No include))
 char chain11 = First chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
 char chain11 = Second chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
 char chain11 = First chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
@@ -37,7 +42,7 @@ Match.time = execution time (float)
 Match.type = type of match(string)
 Match.self.chains = selected chains(string)
 Match.cutoff = selected cutoff(int)
-Match.to_csv(list(list),outname(string)) = takes one _list as parameters(contacts, dismatches, matches) and create a csv file 
+Match.to_csv(_list(list),outname(string)) = takes one _list as parameters(contacts, dismatches, matches) and create a csv file 
 named "outname" with the values.
 
 Exemple:

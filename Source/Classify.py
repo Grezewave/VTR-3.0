@@ -1,5 +1,5 @@
 #This program recieve a PDB format file and create a protein object
-resi = ["ALA","ARG","ASN","ASP","CYS","GLN","GLY","GLU","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL"]
+resi = ["ALA","ARG","ASN","ASP","CYS","GLN","GLY","GLU","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL","HID","HIE"]
 class proteins:
     def __init__(self):
         self.idPDB = ""
@@ -100,6 +100,7 @@ def residuedef(data,reslist,chain):
     o = -1
     info = reslist[:]
     guard = []
+    warn = []
     #Turn each element of the residues list in a object, and put id
     for i in range(0,len(reslist)):
         reslist[i] = residue()
@@ -108,19 +109,32 @@ def residuedef(data,reslist,chain):
     for i in data:
         if i[0:4] == "ATOM":
             if i[21] == chain:
+
                 if int(i[22:26]) not in guard:
+                    core = " "
                     guard.append(int(i[22:26]))
                     o+=1
                     if i[17:20] == reslist[o].id:
                         reslist[o].parameter = int(i[22:26])
-                        reslist[o].atoms.append(i[13:17])
+                        if core == " " and core != i[16]:
+                            core = i[16]
+                        if i[16] == core or i[16] == " ":
+                            reslist[o].atoms.append(i[13:17])
+                        else: 
+                            warn.append(i[17:20]+i[22:26]+i[13:17])
+
                 else:
                     if i[17:20] == reslist[o].id:
                         reslist[o].parameter = int(i[22:26])
-                        reslist[o].atoms.append(i[13:17])
+                        if core == " " and core != i[16]:
+                            core = i[16]
+                        if i[16] == core or i[16] == " ":
+                            reslist[o].atoms.append(i[13:17])
+                        else: 
+                            warn.append(i[17:20]+i[22:26]+i[13:17])
         if i[0:6] == "ENDMDL":
             break
-    return reslist
+    return reslist,warn
     
 def proteindef(data):
     #Create the protein object
@@ -131,7 +145,8 @@ def proteindef(data):
     protein.chains = chainslist(data)
     protein.chains = chainsdef(protein.chains,data)
     for i in protein.chains:
-        i.seq = residuedef(data,i.residues,i.id)
+        i.seq,warn = residuedef(data,i.residues,i.id)
+        protein.warnings.extend(warn)
         for e in i.residues:
             if e.id not in resi:
                 protein.warnings.append(e.id)
@@ -151,20 +166,23 @@ def atomdef(data,atomlist,resname,parameter,chain):
     for i in data:
         if i[0:4] == "ATOM":
             if i[17:20] == resname and i[21] == chain and int(i[22:26]) == parameter:
-                if i[13:17] == atomlist[x].type:
-                    atomlist[x].id = int(i[6:11])
-                    atomlist[x].x = float(i[30:38])
-                    atomlist[x].y = float(i[38:46])
-                    atomlist[x].z = float(i[46:54])
-                    try:
-                        atomlist[x].occupancy = float(i[54:60])
-                    except:
-                        h = 0
-                    try:
-                        atomlist[x].b_factor = float(i[60:66])
-                    except:
-                        h = 0
-                    x+=1
+                try:
+                    if i[13:17] == atomlist[x].type:
+                        atomlist[x].id = int(i[6:11])
+                        atomlist[x].x = float(i[30:38])
+                        atomlist[x].y = float(i[38:46])
+                        atomlist[x].z = float(i[46:54])
+                        try:
+                            atomlist[x].occupancy = float(i[54:60])
+                        except:
+                            h = 0
+                        try:
+                            atomlist[x].b_factor = float(i[60:66])
+                        except:
+                            h = 0
+                        x+=1
+                except:
+                    continue
         if i[0:6] == "ENDMDL":
             break
     return atomlist

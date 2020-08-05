@@ -77,6 +77,7 @@ class Match:
     #build aligned protein and contacts list --------------------------------------------------------------------------------------------
         vtr.clearH(protein1)
         vtr.clearH(protein2)
+
         path = OSfunct.TMAlign(protein1,protein2)
         rtt_name = "../Data/" + path + protein1[protein1.rfind("/"):-4] + "_rotate.pdb"
         rtt_protein = Classify.classify(rtt_name)

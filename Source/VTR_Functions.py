@@ -328,7 +328,18 @@ def clearH(file):
     lines = open(file, 'r').readlines()
     clines = [i for i in lines.copy() if i[0:4] == 'ATOM']
     for line in clines:
+    
+        if line[17:20] == "HID":
+            lines[lines.index(line)] = line.replace("HID", "HIS")
+
+        if line[17:20] == "HIE":
+            lines[lines.index(line)] = line.replace("HIE", "HIS")
+
+
+    clines = [i for i in lines.copy() if i[0:4] == 'ATOM']
+    for line in clines:
+
         if line[13] == 'H':
             lines.remove(line)
-    
+            
     open(file, 'w').write(''.join(lines))

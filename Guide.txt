@@ -1,6 +1,6 @@
 For use VTR, you need do some external settings in your machine.
 
-Download python and install matplotlib, download and install pymol and g++
+Download python3 and install matplotlib, download and install pymol and g++
 
 Installation complete, now, you need put the target proteins in the folder Data,
 that is in VTR extraction folder, in this folder, there's 2 proteins of globin type
@@ -8,9 +8,8 @@ for tests, you can add more proteins in the folder by copy .pdb files to the fol
 
 -------------------------IMPORTANT----------------------------------------------
 
-For VTR first run, run VTR.py script in the Source folder to create the necessary folders,
-after, you can use the software by this way, or import the VTR_Geometric python file, and
-call constructor:
+For run VTR, run VTR.py script in the Source folder. You can use the software by this
+way, or import the VTR_Geometric python file, and call constructor:
 
 --------------------------------------------------------------------------------
 

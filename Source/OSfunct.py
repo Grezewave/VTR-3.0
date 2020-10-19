@@ -4,6 +4,15 @@ import os
 import time
 from datetime import datetime
 
+def mkdir():
+    os.system("md ..\\Results")
+    os.system("md ..\\Results\\Contacts")
+    os.system("md ..\\Results\\Matches")
+    os.system("md ..\\Results\\Dismatches")
+    os.system("md ..\\Plots")
+    os.system("md ..\\Logs")
+    os.system("md ..\\Graphs")
+
 def TMAlign(protein1,protein2):
     #Delete existing alignments and create new
     if (not(os.path.exists("tmalign.exe"))):

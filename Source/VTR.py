@@ -2,13 +2,6 @@
 import os
 import VTR_Geometric
 
-os.system("md ..\\Results")
-os.system("md ..\\Results\\Contacts")
-os.system("md ..\\Results\\Matches")
-os.system("md ..\\Results\\Dismatches")
-os.system("md ..\\Plots")
-os.system("md ..\\Logs")
-os.system("md ..\\Graphs")
 while (1):
      os.system("cls")
      os.system("echo ____________________________________________________________\n")

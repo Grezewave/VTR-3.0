@@ -19,6 +19,14 @@ import os
 class Match:
     #parameters---------------------------------------------------------------------
     def __init__(self, _protein1, _protein2, *args, **kwargs):
+        if not (sys.version_info.major == 3 and sys.version_info.minor >= 5):
+
+            print("Python 3.5 or higher is required.")
+
+            print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
+
+            sys.exit(1)
+        OSfunct.mkdir()
         self.rtt_protein = 0
         self.stc_protein = 0
         self.rtt_contacts = []
@@ -67,7 +75,7 @@ class Match:
                 _type += _chain22
             else:
                 _type += '$'
-        _type += _cutoff
+        _type += str(_cutoff)
 
         self.type = _type
 

@@ -1,11 +1,11 @@
 For use VTR, you need do some external settings in your machine.
 
-Download python:
+Download python3:
 https://www.python.org/
 
 Add python in enviroment variables(windows only):
 Go to enviroment variabels settings and add in path fields, the path of the folder
-that is the python installation
+that is the python3 installation
 
 Download Pymol:
 https://pymol.org/
@@ -27,7 +27,7 @@ for tests, you can add more proteins in the folder by copy .pdb files to the fol
 
 -------------------------IMPORTANT----------------------------------------------
 
-For VTR first run, just double click the .py file "VTR" in Source folder, after,
+You can run VTR just double clicking the file "VTR.py" in Source folder, after,
 you can use the software by this way, or import the VTR_Geometric python file, and
 call function:
 

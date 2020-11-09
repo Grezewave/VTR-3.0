@@ -27,7 +27,7 @@ import traceback
 class Match:
     #parameters---------------------------------------------------------------------
     def __init__(self, _protein1, _protein2, *args, **kwargs):
-    
+        
         OSfunct.mkdir()
         self.rtt_protein = 0
         self.stc_protein = 0
@@ -59,6 +59,7 @@ class Match:
         _type = '-'
 
         try:
+            
             if "d" == __type:
                 _type += '-d'
             if not (_chain11 == '/' and _chain12 == '/' and _chain21 == '/' and _chain22 == '/'):
@@ -214,7 +215,8 @@ class Match:
                 print(lines[data])
 
         except:
-            traceback.print_exc(open('error_logs.txt','w'))
+            traceback.print_exc(file=open('error_logs.txt','w'))
+
     def to_csv(self,_list, outname):
         out = open(outname, 'w')
         stack = ''''''

@@ -22,6 +22,7 @@ import time
 import VTR_Functions as vtr
 import PymolGen as py
 import os
+import traceback
 
 class Match:
     #parameters---------------------------------------------------------------------
@@ -57,70 +58,104 @@ class Match:
         protein2 = _protein2
         _type = '-'
 
-        if "d" == __type:
-            _type += '-d'
-        if not (_chain11 == '/' and _chain12 == '/' and _chain21 == '/' and _chain22 == '/'):
-            if _chain11 != '/':
-                _type += _chain11
+        try:
+            if "d" == __type:
+                _type += '-d'
+            if not (_chain11 == '/' and _chain12 == '/' and _chain21 == '/' and _chain22 == '/'):
+                if _chain11 != '/':
+                    _type += _chain11
+                else:
+                    _type += '$'
+                if _chain12 != '/':
+                    _type += _chain12
+                else:
+                    _type += '$'
+                if _chain21 != '/':
+                    _type += _chain21
+                else:
+                    _type += '$' 
+                if _chain22 != '/':    
+                    _type += _chain22
+                else:
+                    _type += '$'
+            _type += str(_cutoff)
+
+            self.type = _type
+
+            outname = "../Logs/"+protein1[protein1.rfind("/")+1:-4]+"x"+protein2[protein2.rfind("/")+1:-4]+_type+"Log.txt"
+            out = open(outname, 'w', encoding='utf-8')
+
+        #build aligned protein and contacts list --------------------------------------------------------------------------------------------
+            vtr.clearH(protein1)
+            vtr.clearH(protein2)
+
+            path = OSfunct.TMAlign(protein1,protein2)
+            rtt_name = "../Data/" + path + protein1[protein1.rfind("/"):-4] + "_rotate.pdb"
+            rtt_protein = Classify.classify(rtt_name)
+            stc_protein = Classify.classify(protein2)
+            self.rtt_protein = rtt_protein
+            self.stc_protein = stc_protein
+            if 'd' in _type:
+                rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/"):-4] + "_rotate",_chain11,_chain12,'d')
+                stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/"):-4],_chain21,_chain22,'d')
             else:
-                _type += '$'
-            if _chain12 != '/':
-                _type += _chain12
-            else:
-                _type += '$'
-            if _chain21 != '/':
-                _type += _chain21
-            else:
-                _type += '$' 
-            if _chain22 != '/':    
-                _type += _chain22
-            else:
-                _type += '$'
-        _type += str(_cutoff)
+                rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/"):-4] + "_rotate",_chain11,_chain12)
+                stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/"):-4],_chain21,_chain22)
 
-        self.type = _type
+            self.rtt_contacts = rtt_contacts
+            self.stc_contacts = stc_contacts
 
-        outname = "../Logs/"+protein1[protein1.rfind("/")+1:-4]+"x"+protein2[protein2.rfind("/")+1:-4]+_type+"Log.txt"
-        out = open(outname, 'w', encoding='utf-8')
+        #match contacts ---------------------------------------------------------------------------------------------------------------------
+            matches,rtt_dismatches,stc_dismatches = vtr.match_contacts(rtt_contacts,stc_contacts,int(_cutoff))
+            self.matches = matches
+            self.rtt_dismatches = rtt_dismatches
+            self.stc_dismatches = stc_dismatches
+            end = time.time()
 
-    #build aligned protein and contacts list --------------------------------------------------------------------------------------------
-        vtr.clearH(protein1)
-        vtr.clearH(protein2)
+        #write output -----------------------------------------------------------------------------------------------------------------------
+            vtr.write_dismatch(protein1,protein2,rtt_dismatches,stc_dismatches,_type)
+            result = str(len(matches)) + " matches found" + "\n"
+            self.number = len(matches)
+            out.write(result)
+            out.write("Match execution time: " + str(round(end-start,0))+" seconds\n")
+            self.time = end-start
+            if (0 == len(matches)):
+                out.write("\n")
+                out.write("\n")
+                out.write("\n")
+                out.write(protein1[protein1.rfind("/")+1:]+"\n")
+                if "/" != _chain11:
+                    out.write(_chain11+"\n")
+                else:
+                    out.write("All\n")
+                if "/" != _chain12:
+                    out.write(_chain12+"\n")
+                else:
+                    out.write("All\n")
+                out.write(protein2[protein2.rfind("/")+1:]+"\n")
+                if "/" != _chain21:
+                    out.write(_chain21+"\n")
+                else:
+                    out.write("All\n")
+                if "/" != _chain22:
+                    out.write(_chain22+"\n")
+                else:
+                    out.write("All\n")
+                out.write(str(_cutoff)+"\n")
 
-        path = OSfunct.TMAlign(protein1,protein2)
-        rtt_name = "../Data/" + path + protein1[protein1.rfind("/"):-4] + "_rotate.pdb"
-        rtt_protein = Classify.classify(rtt_name)
-        stc_protein = Classify.classify(protein2)
-        self.rtt_protein = rtt_protein
-        self.stc_protein = stc_protein
-        if 'd' in _type:
-            rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/"):-4] + "_rotate",_chain11,_chain12,'d')
-            stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/"):-4],_chain21,_chain22,'d')
-        else:
-            rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/"):-4] + "_rotate",_chain11,_chain12)
-            stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/"):-4],_chain21,_chain22)
-
-        self.rtt_contacts = rtt_contacts
-        self.stc_contacts = stc_contacts
-
-    #match contacts ---------------------------------------------------------------------------------------------------------------------
-        matches,rtt_dismatches,stc_dismatches = vtr.match_contacts(rtt_contacts,stc_contacts,int(_cutoff))
-        self.matches = matches
-        self.rtt_dismatches = rtt_dismatches
-        self.stc_dismatches = stc_dismatches
-        end = time.time()
-
-    #write output -----------------------------------------------------------------------------------------------------------------------
-        vtr.write_dismatch(protein1,protein2,rtt_dismatches,stc_dismatches,_type)
-        result = str(len(matches)) + " matches found" + "\n"
-        self.number = len(matches)
-        out.write(result)
-        out.write("Match execution time: " + str(round(end-start,0))+" seconds\n")
-        self.time = end-start
-        if (0 == len(matches)):
-            out.write("\n")
-            out.write("\n")
-            out.write("\n")
+                if "d" in _type:
+                    out.write("All interactions")
+                else:
+                    out.write("No main chain interactions")
+                out.close()
+                sys.exit()
+            out.write("Match RMSD = "+str(round(vtr.RMSD(matches, rtt_protein, stc_protein),2)) + "\n")
+            self.RMSD = vtr.RMSD(matches, rtt_protein, stc_protein)
+            VTR, mean_AVD = vtr.VTR(matches, rtt_contacts, stc_contacts ,len(rtt_dismatches),len(stc_dismatches),int(_cutoff))
+            out.write("VTR = "+str(round(VTR,2)) + "\n")
+            self.VTR = VTR
+            out.write("Average AVD = "+str(round(mean_AVD,2)) + " A\n")
+            self.mAVD = mean_AVD
             out.write(protein1[protein1.rfind("/")+1:]+"\n")
             if "/" != _chain11:
                 out.write(_chain11+"\n")
@@ -142,74 +177,44 @@ class Match:
             out.write(str(_cutoff)+"\n")
 
             if "d" in _type:
-                out.write("All interactions")
+                out.write("Detailed")
             else:
-                out.write("No main chain interactions")
+                out.write("Simple")
             out.close()
-            sys.exit()
-        out.write("Match RMSD = "+str(round(vtr.RMSD(matches, rtt_protein, stc_protein),2)) + "\n")
-        self.RMSD = vtr.RMSD(matches, rtt_protein, stc_protein)
-        VTR, mean_AVD = vtr.VTR(matches, rtt_contacts, stc_contacts ,len(rtt_dismatches),len(stc_dismatches),int(_cutoff))
-        out.write("VTR = "+str(round(VTR,2)) + "\n")
-        self.VTR = VTR
-        out.write("Average AVD = "+str(round(mean_AVD,2)) + " A\n")
-        self.mAVD = mean_AVD
-        out.write(protein1[protein1.rfind("/")+1:]+"\n")
-        if "/" != _chain11:
-            out.write(_chain11+"\n")
-        else:
-            out.write("All\n")
-        if "/" != _chain12:
-            out.write(_chain12+"\n")
-        else:
-            out.write("All\n")
-        out.write(protein2[protein2.rfind("/")+1:]+"\n")
-        if "/" != _chain21:
-            out.write(_chain21+"\n")
-        else:
-            out.write("All\n")
-        if "/" != _chain22:
-            out.write(_chain22+"\n")
-        else:
-            out.write("All\n")
-        out.write(str(_cutoff)+"\n")
 
-        if "d" in _type:
-            out.write("Detailed")
-        else:
-            out.write("Simple")
-        out.close()
+            vtr.writer(protein1,protein2,rtt_protein,stc_protein,rtt_contacts,stc_contacts,matches,_type)
 
-        vtr.writer(protein1,protein2,rtt_protein,stc_protein,rtt_contacts,stc_contacts,matches,_type)
+        #make plots -------------------------------------------------------------------------------------------------------------------------
+            folder = py.detailed_ploter(rtt_name, protein2, matches,rtt_dismatches,stc_dismatches, int(_cutoff), _type)
+            py.multi_ploter(rtt_name, protein2, matches, int(_cutoff), folder)
 
-    #make plots -------------------------------------------------------------------------------------------------------------------------
-        folder = py.detailed_ploter(rtt_name, protein2, matches,rtt_dismatches,stc_dismatches, int(_cutoff), _type)
-        py.multi_ploter(rtt_name, protein2, matches, int(_cutoff), folder)
+        #make graphs ------------------------------------------------------------------------------------------------------------------------
+            folder = OSfunct.create_dir("../Graphs",rtt_name,protein2,_type)
 
-    #make graphs ------------------------------------------------------------------------------------------------------------------------
-        folder = OSfunct.create_dir("../Graphs",rtt_name,protein2,_type)
+            vtr.freq_VMD(matches,int(_cutoff),folder,protein1[protein1.rfind("/")+1:-4],protein2[protein2.rfind("/")+1:-4])
 
-        vtr.freq_VMD(matches,int(_cutoff),folder,protein1[protein1.rfind("/")+1:-4],protein2[protein2.rfind("/")+1:-4])
+            if len(rtt_protein.warnings) != 0:
+                self.warnings += 'Residues ['
+                for e in rtt_protein.warnings:
+                    self.warnings += e + ', '
+                self.warnings += '] from protein 1 not involved in the contact calculation \n'
+            if len(stc_protein.warnings) != 0:
+                self.warnings += 'Residues ['
+                for e in stc_protein.warnings:
+                    self.warnings += e + ', '
+                self.warnings += '] from protein 2 not involved in the contact calculation'
+            warn = open('../Logs/'+protein1[protein1.rfind("/")+1:-4]+'_x_'+protein2[protein2.rfind("/")+1:-4]+_type+'_warnings.txt','w')
+            if self.warnings != '':
+                warn.write(self.warnings)
+                
+        #write recent parameters ------------------------------------------------------------------------------------------------------------
+            output = open(outname, 'r')
+            lines = output.readlines()
+            for data in range(0,5):
+                print(lines[data])
 
-        if len(rtt_protein.warnings) != 0:
-            self.warnings += 'Residues ['
-            for e in rtt_protein.warnings:
-                self.warnings += e + ', '
-            self.warnings += '] from protein 1 not involved in the contact calculation \n'
-        if len(stc_protein.warnings) != 0:
-            self.warnings += 'Residues ['
-            for e in stc_protein.warnings:
-                self.warnings += e + ', '
-            self.warnings += '] from protein 2 not involved in the contact calculation'
-        warn = open('../Logs/'+protein1[protein1.rfind("/")+1:-4]+'_x_'+protein2[protein2.rfind("/")+1:-4]+_type+'_warnings.txt','w')
-        if self.warnings != '':
-            warn.write(self.warnings)
-            
-    #write recent parameters ------------------------------------------------------------------------------------------------------------
-        output = open(outname, 'r')
-        lines = output.readlines()
-        for data in range(0,5):
-            print(lines[data])
+        except:
+            traceback.print_exc(open('error_logs.txt','w'))
     def to_csv(self,_list, outname):
         out = open(outname, 'w')
         stack = ''''''

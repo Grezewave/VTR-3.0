@@ -41,9 +41,9 @@ kwargs:
 int cutoff   = Cutoff to AVD (Default = 2)
 char mtype   = 'd'for include contacts among main-chain atoms of closer residues(increase the number of results highly). (Default = 'x'(No include))
 char chain11 = First chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
-char chain11 = Second chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
-char chain11 = First chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
-char chain11 = Second chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
+char chain12 = Second chain to be filtered in the contact calculation of protein 1 (Default = '/'(All))
+char chain21 = First chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
+char chain22 = Second chain to be filtered in the contact calculation of protein 2 (Default = '/'(All))
 
 object is of class "Match";
 Match metods and attributes:

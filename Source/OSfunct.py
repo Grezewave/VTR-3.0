@@ -5,13 +5,26 @@ import time
 from datetime import datetime
 
 def mkdir():
-    os.system("md ..\\Results")
-    os.system("md ..\\Results\\Contacts")
-    os.system("md ..\\Results\\Matches")
-    os.system("md ..\\Results\\Dismatches")
-    os.system("md ..\\Plots")
-    os.system("md ..\\Logs")
-    os.system("md ..\\Graphs")
+    if not os.path.exists("../Results"):
+        os.mkdir("../Results")
+
+    if not os.path.exists("../Results/Contacts"):
+        os.mkdir("../Results/Contacts")
+
+    if not os.path.exists(".../Results/Matches"):
+        os.mkdir("../Results/Matches")
+
+    if not os.path.exists("../Results/Dismatches"):
+        os.mkdir("../Results/Dismatches")
+
+    if not os.path.exists("../Plots"):
+        os.mkdir("../Plots")
+        
+    if not os.path.exists("../Logs"):
+        os.mkdir("../Logs")
+
+    if not os.path.exists("../Graphs"):
+        os.mkdir("../Graphs")
 
 def TMAlign(protein1,protein2):
     #Delete existing alignments and create new

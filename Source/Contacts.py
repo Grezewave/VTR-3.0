@@ -378,7 +378,7 @@ def statistics(contact_list, outname):
 def contacts(protein,outname,chain1,chain2, detail = 'x'):
     #define contacts
     contacts = []
-    outfile = "../Results/Contacts" + outname + "_"
+    outfile = "../Results/Contacts/" + outname + "_"
     if chain1 != '/':
         outfile+=chain1
     else:

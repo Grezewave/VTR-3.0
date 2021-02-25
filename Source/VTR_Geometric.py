@@ -95,11 +95,11 @@ class Match:
         self.rtt_protein = rtt_protein
         self.stc_protein = stc_protein
         if 'd' in _type:
-            rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/"):-4] + "_rotate",_chain11,_chain12,'d')
-            stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/"):-4],_chain21,_chain22,'d')
+            rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/")+1:-4] + "_rotate",_chain11,_chain12,'d')
+            stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/")+1:-4],_chain21,_chain22,'d')
         else:
-            rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/"):-4] + "_rotate",_chain11,_chain12)
-            stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/"):-4],_chain21,_chain22)
+            rtt_contacts = Contacts.contacts(rtt_protein,protein1[protein1.rfind("/")+1:-4] + "_rotate",_chain11,_chain12)
+            stc_contacts = Contacts.contacts(stc_protein,protein2[protein2.rfind("/")+1:-4],_chain21,_chain22)
 
         self.rtt_contacts = rtt_contacts
         self.stc_contacts = stc_contacts
